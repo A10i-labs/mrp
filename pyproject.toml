@@ -1,0 +1,33 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "mrp"
+version = "0.0.1"
+requires-python = ">=3.12"
+dependencies = [
+  "pydantic>=2.7",
+  "typer>=0.12",
+  "blake3>=0.4",
+  "orjson>=3.10",
+  "pyyaml>=6.0",
+]
+
+[project.scripts]
+mrp = "mrp.cli.main:app"
+
+[tool.hatch.build.targets.wheel]
+packages = [
+  "src/mrp",
+  "src/examples",
+]
+
+[tool.ruff]
+line-length = 100
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+
+

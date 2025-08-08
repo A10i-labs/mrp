@@ -1,0 +1,13 @@
+version: v0
+job_id: toy-001
+map:
+  operator: "examples.toy:UppercaseAgent"
+  shards:
+    - { _shard_id: 0, text: "foo" }
+    - { _shard_id: 1, text: "bar" }
+reduce:
+  operator: "examples.toy:ConcatReducer"
+  config: { sep: "-" }
+produce:
+  operator: "examples.toy:JsonProducer"
+  config: {}
