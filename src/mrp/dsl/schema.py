@@ -1,21 +1,29 @@
 from pydantic import BaseModel, Field, ConfigDict
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 import yaml
 import orjson
 
 
+class GeneratedOperator(BaseModel):
+    code: str  # python source code string
+    entrypoint: str  # module:Class inside the generated code
+
+
 class MapSpec(BaseModel):
-    operator: str
+    operator: Optional[str] = None  # legacy import path (module:Class)
+    generated: Optional[GeneratedOperator] = None  # inline generated operator
     shards: List[Dict[str, Any]] = Field(default_factory=list)
 
 
 class ReduceSpec(BaseModel):
-    operator: str
+    operator: Optional[str] = None
+    generated: Optional[GeneratedOperator] = None
     config: Dict[str, Any] = Field(default_factory=dict)
 
 
 class ProduceSpec(BaseModel):
-    operator: str
+    operator: Optional[str] = None
+    generated: Optional[GeneratedOperator] = None
     config: Dict[str, Any] = Field(default_factory=dict)
 
 

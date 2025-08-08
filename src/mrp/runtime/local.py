@@ -3,6 +3,8 @@ from typing import Dict, Any, List
 from ..ir.model import IR
 from ..artifacts.store import put_json
 import importlib
+import sys
+from pathlib import Path
 
 
 def _load(path: str):
@@ -12,6 +14,12 @@ def _load(path: str):
 
 
 def run_ir(ir: IR, max_workers: int | None = None) -> Dict[str, Any]:
+    # Ensure materialized generated operators are importable
+    ops_pkg_root = Path(".mrp").resolve()
+    if ops_pkg_root.exists():
+        root = str(ops_pkg_root)
+        if root not in sys.path:
+            sys.path.insert(0, root)
     seed = ir.manifest["seed"]
     Agent = _load(ir.manifest["operators"]["map"])
     Reducer = _load(ir.manifest["operators"]["reduce"])

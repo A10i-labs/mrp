@@ -17,10 +17,10 @@ This document captures the step-by-step plan for prioritization, monorepo design
 * Checkpointed map outputs to content-addressed store; deterministic reduce; gated produce
 * Exit criteria: small MRP job runs with 2 agents, 1 reducer, 1 producer; reproducible
 
-### 3. Operator Registry + SDK
+### 3. Code Generation Layer + SDK
 
-* Agent/Reducer/Producer base classes + versioned metadata; allowlist + pinned digests
-* Exit criteria: operators register, lint, and run under IR planner with pinned versions
+* Agent/Reducer/Producer base interfaces; dynamic operator generation with guardrails
+* Exit criteria: NL → DSL → generated operator(s) accepted by compiler and executed with guardrails
 
 ### 4. Cost/Quota Governor + Observability
 
@@ -50,7 +50,6 @@ mrp/
 │  ├─ policy/                 # safety, cost, determinism rules
 │  ├─ runtime/                # Runner API, backends: local, ray
 │  ├─ sdk/                    # AgentBase, ReducerBase, ProducerBase
-│  ├─ registry/               # operator registry metadata and signatures
 │  ├─ artifacts/              # content-addressed store and hashing
 │  ├─ evaluator/              # optional evaluation step before produce
 │  └─ cli/                    # CLI interface (compile/run/replay)
@@ -73,7 +72,7 @@ mrp/
 
 * Compiler → Runtime: IR.json + manifest.json
 * Runtime → Artifacts: {shard\_id → output\_digest} + logs/metrics
-* Operators → Registry: operator.yaml (name, version, image, schema)
+* Operators → Dynamic: generated operator code/materialized module metadata (digest, entrypoint)
 * Produce → Sinks: sink.yaml + ACL/schema; only produce may write
 
 ## Key decisions
@@ -105,9 +104,9 @@ mrp/
 * Local runner backend; 2 agents, 1 reducer, 1 producer
 * Exit: mrp compile + mrp run --local → reproducible digests
 
-### Sprint 2 — Ray Backend, Registry, Governor
+### Sprint 2 — Ray Backend, Codegen Integration, Governor
 
-* Ray backend; caching; operator registry + signatures
+* Ray backend; caching; dynamic operator materialization + guardrails
 * Compile-time budget estimator; runtime caps; OpenTelemetry
 * Exit: 1k-shard Ray job runs; budget kills enforced; metrics visible
 
@@ -174,11 +173,11 @@ mrp/
 14. [ ] Support running MapTasks on Ray with async checkpointing
 15. [ ] Implement Ray-based ReduceTask with stable ordered inputs
 
-#### 🧱 Operator Registry
+#### 🧠 Code Generation Integration
 
-16. [ ] Define `operator.yaml` schema for agents/reducers/producers
-17. [ ] Implement registry loader and signature validation
-18. [ ] Add allowlist enforcement based on pinned operator digests
+16. [ ] Extend DSL to accept generated operator blocks (code + entrypoint)
+17. [ ] Compiler materializes code to content-addressed module and records digest
+18. [ ] Enforce guardrails: no network by default, CPU/mem/time caps, budget checks
 
 #### 💵 Cost Governance
 

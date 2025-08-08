@@ -1,0 +1,25 @@
+{
+  "ir": {
+    "job_id": "gen-001",
+    "operators": {
+      "map": "ops_pkg.gen_d9d371707b52ca7f6f15c2b957cb229569ee41d051e7ba4ef9a3631ff8559a6f:GCContentAgent",
+      "produce": "examples.toy:JsonProducer",
+      "reduce": "ops_pkg.gen_622fa9adb110cbf539a4493c4cbaa7600a8e04056c04b43e8e249dfedb8bd621:AvgReducer"
+    },
+    "seed": "b8b87f757ca8e16f40774ed32e08be8ac81c4dac8a21e49591af00137a40a5ad"
+  },
+  "manifest": {
+    "job_id": "gen-001",
+    "operators": {
+      "map": "ops_pkg.gen_d9d371707b52ca7f6f15c2b957cb229569ee41d051e7ba4ef9a3631ff8559a6f:GCContentAgent",
+      "produce": "examples.toy:JsonProducer",
+      "reduce": "ops_pkg.gen_622fa9adb110cbf539a4493c4cbaa7600a8e04056c04b43e8e249dfedb8bd621:AvgReducer"
+    },
+    "seed": "b8b87f757ca8e16f40774ed32e08be8ac81c4dac8a21e49591af00137a40a5ad"
+  },
+  "policy": {
+    "caps": { "mem_mb": null, "time_s": null, "workers": null },
+    "egress_allowed": false,
+    "status": "ok"
+  }
+}

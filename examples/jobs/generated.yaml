@@ -1,0 +1,35 @@
+version: v0
+job_id: gen-001
+map:
+  generated:
+    entrypoint: "ops.gc:GCContentAgent"
+    code: |
+      # Generated operator module (ephemeral)
+      from typing import Dict, Any
+      class GCContentAgent:
+          def run(self, params: Dict[str, Any], seed: str) -> Dict[str, Any]:
+              seq = params.get("seq", "")
+              if not seq:
+                  return {"_shard_id": params.get("_shard_id", 0), "gc": 0.0}
+              seq = seq.upper()
+              g = seq.count("G")
+              c = seq.count("C")
+              gc = (g + c) / max(len(seq), 1)
+              return {"_shard_id": params.get("_shard_id", 0), "gc": gc}
+  shards:
+    - { _shard_id: 0, seq: "ATGC" }
+    - { _shard_id: 1, seq: "GGGG" }
+reduce:
+  generated:
+    entrypoint: "ops.reduce:AvgReducer"
+    code: |
+      from typing import Dict, Any, List
+      class AvgReducer:
+          def run(self, inputs: List[Dict[str, Any]], seed: str) -> Dict[str, Any]:
+              vals = [x.get("gc", 0.0) for x in inputs]
+              avg = sum(vals) / max(len(vals), 1)
+              return {"avg_gc": avg}
+  config: {}
+produce:
+  operator: "examples.toy:JsonProducer"
+  config: {}

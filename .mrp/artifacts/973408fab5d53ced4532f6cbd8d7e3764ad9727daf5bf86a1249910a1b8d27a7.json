@@ -1,0 +1,8 @@
+{
+  "maps": [
+    { "_shard_id": 0, "gc": 0.5 },
+    { "_shard_id": 1, "gc": 1.0 }
+  ],
+  "produce": { "avg_gc": 0.75 },
+  "reduce": { "avg_gc": 0.75 }
+}
