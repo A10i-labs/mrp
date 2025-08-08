@@ -1,8 +1,1 @@
-{
-  "maps": [
-    { "_shard_id": 0, "text": "FOO" },
-    { "_shard_id": 1, "text": "BAR" }
-  ],
-  "produce": { "joined": "FOO-BAR" },
-  "reduce": { "joined": "FOO-BAR" }
-}
+{"maps":[{"_shard_id":0,"text":"FOO"},{"_shard_id":1,"text":"BAR"}],"produce":{"joined":"FOO-BAR"},"reduce":{"joined":"FOO-BAR"}}
