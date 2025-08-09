@@ -11,6 +11,9 @@ __pycache__/
 
 # Macos
 .DS_Store
+**/.DS_Store
+**/.AppleDouble
+**/.LSOverride
 
 
 # Distribution / packaging
