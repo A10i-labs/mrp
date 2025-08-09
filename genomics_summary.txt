@@ -1,8 +1,0 @@
-{
-  "mean_coverage": 149.31225,
-  "coverage_breadth_pct": 100.0,
-  "total_reads": 20000,
-  "mapped_reads": 19600,
-  "mapping_rate_pct": 98.0,
-  "total_variants": 3
-}
