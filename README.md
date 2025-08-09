@@ -9,6 +9,15 @@ Agentic MRP runtime and compiler.
 - Content-addressed artifacts (BLAKE3 over stable JSON)
 - CLI: `mrp compile`, `mrp run`, `mrp replay` (stub)
 
+mermaid chart
+
+```mermaid
+graph TD
+    A[Compile] --> B[Run]
+    B --> C[Produce]
+    C --> D[Output]
+```
+
 ### Requirements
 
 - Python 3.12+
