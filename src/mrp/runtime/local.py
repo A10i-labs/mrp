@@ -5,6 +5,8 @@ from ..artifacts.store import put_json
 import importlib
 import sys
 from pathlib import Path
+from datetime import datetime
+import os
 
 
 def _load(path: str):
@@ -35,9 +37,16 @@ def run_ir(ir: IR, max_workers: int | None = None) -> Dict[str, Any]:
 
     results_sorted = sorted(results, key=lambda r: r.get("_shard_id", 0))
     reduce_out = Reducer().run(results_sorted, seed)
-    produce_out = Producer().run(reduce_out, seed)
+    output_dir = Path(".mrp/outputs") / ir.manifest.get("job_id", "job") / datetime.utcnow().strftime("%Y%m%d_%H%M%S")
+    output_dir.mkdir(parents=True, exist_ok=True)
+    cwd = os.getcwd()
+    try:
+        os.chdir(output_dir)
+        produce_out = Producer().run(reduce_out, seed)
+    finally:
+        os.chdir(cwd)
 
-    run_record = {"maps": results_sorted, "reduce": reduce_out, "produce": produce_out}
+    run_record = {"backend": "local", "output_dir": str(output_dir), "maps": results_sorted, "reduce": reduce_out, "produce": produce_out}
     run_digest = put_json(run_record)
     return {"run_digest": run_digest, "record": run_record}
 

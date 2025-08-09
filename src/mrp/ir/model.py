@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 
 @dataclass(frozen=True)
@@ -27,5 +27,6 @@ class IR:
     reduce: ReduceTask
     produce: ProduceTask
     manifest: Dict[str, Any]
+    execution_backend: Optional[str] = None
 
 

@@ -12,6 +12,12 @@ dependencies = [
   "blake3>=0.4",
   "orjson>=3.10",
   "pyyaml>=6.0",
+  "python-dotenv>=1.0",
+  "daytona>=0.1.0",
+  "numpy>=1.26",
+  "matplotlib>=3.8",
+  "pandas>=2.2",
+  "seaborn>=0.13",
 ]
 
 [project.scripts]

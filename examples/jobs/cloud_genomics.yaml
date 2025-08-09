@@ -1,0 +1,49 @@
+version: v0
+job_id: cloud-genomics-001
+map:
+  # Generated map operator simulating shard coverage + stats (remote)
+  generated:
+    entrypoint: "ops.genomics:ShardSimAgent"
+    code: |
+      from typing import Dict, Any, List
+      import random
+      class ShardSimAgent:
+          def run(self, params: Dict[str, Any], seed: str) -> Dict[str, Any]:
+              random.seed(f"{seed}:{params.get('_shard_id',0)}")
+              # Simulate coverage bins for this shard
+              bins = int(params.get('bins', 1000))
+              mean_cov = float(params.get('mean_cov', 150.0))
+              coverage_bins = [max(0, int(random.gauss(mean_cov, mean_cov*0.2))) for _ in range(bins)]
+              # Simulate read stats
+              total_reads = int(params.get('total_reads', 5000))
+              mapped_reads = int(total_reads * 0.98)
+              variant_count = random.randint(0, 2)
+              return {
+                  '_shard_id': int(params.get('_shard_id', 0)),
+                  'bin_index_start': int(params.get('bin_index_start', 0)),
+                  'coverage_bins': coverage_bins,
+                  'total_reads': total_reads,
+                  'mapped_reads': mapped_reads,
+                  'variant_count': variant_count,
+              }
+  shards:
+    - {
+        _shard_id: 0,
+        bin_index_start: 0,
+        bins: 2000,
+        mean_cov: 150.0,
+        total_reads: 10000,
+      }
+    - {
+        _shard_id: 1,
+        bin_index_start: 2000,
+        bins: 2000,
+        mean_cov: 150.0,
+        total_reads: 10000,
+      }
+reduce:
+  operator: "examples.genomics:GenomicsReducer"
+  config: {}
+produce:
+  operator: "examples.genomics:GenomicsReportProducer"
+  config: {}

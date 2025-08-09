@@ -1,7 +1,8 @@
 import typer
 from ..dsl.schema import load_yaml
 from ..compiler import compile_job
-from ..runtime.local import run_ir
+from ..runtime.local import run_ir as run_ir_local
+from ..runtime.backends.cloud_sandbox import run_ir_cloud as run_ir_cloud
 from ..artifacts.store import put_json
 
 
@@ -17,10 +18,13 @@ def compile(path: str):
 
 
 @app.command()
-def run(path: str, local: bool = True):
+def run(path: str, backend: str = "local"):
     job = load_yaml(path)
     ir, _, _ = compile_job(job)
-    result = run_ir(ir)
+    if backend == "cloud_sandbox":
+        result = run_ir_cloud(ir)
+    else:
+        result = run_ir_local(ir)
     print(result["run_digest"])
 
 

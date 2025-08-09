@@ -1,8 +1,8 @@
-## MRP (Map → Reduce → Produce)
+# MRP (Map → Reduce → Produce)
 
-Minimal agentic MRP runtime and compiler (Sprint 1).
+Agentic MRP runtime and compiler.
 
-### Features
+## Features
 
 - YAML → IR compiler with deterministic seed and canonical ordering
 - Local threadpool runner (maps → reduce → produce)
@@ -33,6 +33,41 @@ cat .mrp/artifacts/<COMPILE_DIGEST>.json
 mrp run examples/jobs/toy.yaml
 # prints RUN_DIGEST → inspect JSON
 cat .mrp/artifacts/<RUN_DIGEST>.json
+```
+
+### Cloud sandbox (Daytona) usage
+
+- Requirements: set `DAYTONA_API_KEY` in a `.env` at repo root (or env var).
+- Behavior with `--backend cloud_sandbox`:
+  - Map runs in Daytona sandboxes (one per shard)
+  - Reduce runs locally (deterministic aggregation)
+  - Produce runs locally
+
+Examples:
+
+```bash
+# Pre-authored operators in cloud
+mrp run examples/jobs/cloud_toy.yaml --backend cloud_sandbox
+cat .mrp/artifacts/<RUN_DIGEST>.json
+
+# Generated operators in cloud
+mrp run examples/jobs/generated.yaml --backend cloud_sandbox
+cat .mrp/artifacts/<RUN_DIGEST>.json
+```
+
+Outputs location:
+
+- Producer outputs are saved under `.mrp/outputs/<job_id>/<timestamp>/`.
+- The run artifact also includes `output_dir` pointing to this folder.
+
+Cloud genomics demo (maps on sandbox, reduce/produce local):
+
+```bash
+mrp run examples/jobs/cloud_genomics.yaml --backend cloud_sandbox
+# Find outputs using the run artifact:
+cat .mrp/artifacts/<RUN_DIGEST>.json | jq -r .output_dir
+ls $(cat .mrp/artifacts/<RUN_DIGEST>.json | jq -r .output_dir)
+# Includes: analysis_report.md, genomics_analysis_plots.(png|pdf), analysis_summary.tsv, genomics_bins.csv, genomics_summary.txt
 ```
 
 ### Input (YAML) → Output (JSON)
@@ -160,6 +195,10 @@ pytest -q
 ### Layout
 
 - `src/mrp/*`: compiler, IR, runtime, SDK, CLI, artifacts
-- `src/examples/*`: toy operators for Sprint 1
-- `examples/jobs/*`: example job specs
-- `docs/mrp_PRD.md`: plan and sprint checklist
+- `src/mrp/runtime/backends/*`: cloud backends (e.g., Daytona `cloud_sandbox`)
+- `src/examples/*`: example operators (`toy`, `genomics`)
+- `examples/jobs/*`: example job specs (`cloud_toy.yaml`, `generated.yaml`, `cloud_genomics.yaml`)
+- `.mrp/artifacts/*`: compile/run artifacts (JSON)
+- `.mrp/ops_pkg/*`: materialized generated operator modules
+- `.mrp/outputs/<job_id>/<timestamp>/*`: producer outputs (reports, plots, CSVs)
+- `docs/mrp_PRD.md`, `docs/daytona_PRD.md`: plans and runbooks
