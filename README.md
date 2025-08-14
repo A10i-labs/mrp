@@ -9,13 +9,40 @@ Agentic MRP runtime and compiler.
 - Content-addressed artifacts (BLAKE3 over stable JSON)
 - CLI: `mrp compile`, `mrp run`, `mrp replay` (stub)
 
-mermaid chart
-
 ```mermaid
-graph TD
-    A[Compile] --> B[Run]
-    B --> C[Produce]
-    C --> D[Output]
+graph LR
+    subgraph "📋 Job Configuration"
+        JOB["🧬 Biological data processing "]
+    end
+    
+    subgraph "🗺️ MAP"
+        AGENT["🤖 Agent: process_bio<br/>Filter sequences ≥ 5 chars"]
+        DATA1["📦 Shard 1<br/>[ATCG,GCTA,TGCA,CGAT,AATG]"]
+        DATA2["📦 Shard 2<br/>[PROTEIN_A,ENZYME_B,RECEPTOR_C,KINASE_D]"]
+        DATA3["📦 Shard 3<br/>[ATP,NADH,GLUCOSE,GLYCOGEN,LACTATE]"]
+        DATA4["📦 Shard 4<br/>[HEMOGLOBIN,INSULIN,COLLAGEN,KERATIN]"]
+    end
+    
+    subgraph "🔄 REDUCE"
+        REDUCE["📊 stats<br/>Aggregate all results"]
+    end
+    
+    subgraph "📤 PRODUCE "
+        PRODUCE["📝 save_markdown<br/>Generate formatted report"]
+        OUTPUT["📄 outputs/bio_results.md<br/>Markdown report file"]
+    end
+    
+    JOB --> AGENT
+    AGENT --> DATA1
+    AGENT --> DATA2  
+    AGENT --> DATA3
+    AGENT --> DATA4
+    DATA1 --> REDUCE
+    DATA2 --> REDUCE
+    DATA3 --> REDUCE
+    DATA4 --> REDUCE
+    REDUCE --> PRODUCE
+    PRODUCE --> OUTPUT
 ```
 
 ### Requirements
