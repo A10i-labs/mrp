@@ -6,8 +6,10 @@ __pycache__/
 # C extensions
 *.so
 
+
 # MRP
 .mrp/
+.docs/
 
 # Macos
 .DS_Store
