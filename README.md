@@ -16,7 +16,7 @@ graph LR
     end
     
     subgraph "🗺️ MAP"
-        AGENT["🤖 Agent: process_bio<br/>Filter sequences ≥ 5 chars"]
+        AGENT["🤖 Agent: process_bi"]
         DATA1["📦 Shard 1<br/>[ATCG,GCTA,TGCA,CGAT,AATG]"]
         DATA2["📦 Shard 2<br/>[PROTEIN_A,ENZYME_B,RECEPTOR_C,KINASE_D]"]
         DATA3["📦 Shard 3<br/>[ATP,NADH,GLUCOSE,GLYCOGEN,LACTATE]"]
@@ -28,8 +28,8 @@ graph LR
     end
     
     subgraph "📤 PRODUCE "
-        PRODUCE["📝 save_markdown<br/>Generate formatted report"]
-        OUTPUT["📄 outputs/bio_results.md<br/>Markdown report file"]
+        PRODUCE["📝 save_markdown<br/>Generate  report"]
+        OUTPUT["📊 Final Report"]
     end
     
     JOB --> AGENT
